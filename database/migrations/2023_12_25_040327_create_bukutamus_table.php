@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bukutamus', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
-            $table->string('whatsApp', 20); // Sesuaikan panjang maksimum yang diizinkan
-            $table->text('alamat');
+        Schema::create('bukutamu', function (Blueprint $table) {
+            $table->string('Nama');
+            $table->integer('WhatsApp');
+            $table->text('Alamat');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bukutamus');
+        Schema::dropIfExists('bukutamu');
     }
 };

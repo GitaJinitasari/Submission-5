@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bukutamu extends Model
 {
-    use HasFactory;
-    public $table="Bukutamus";
-    protected $fillable = ['nama','whatsApp','alamat'];
+    protected $fillable=['Nama','WhatsApp','Alamat'];
+    protected $table ='Bukutamu';
 }

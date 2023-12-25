@@ -20,9 +20,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/Bukutamu',function(){
-    return view('Bukutamu.index');
-});
-
-
-Route::resource('Catatantamu',CatatantamuController::class);
+Route::resource('Bukutamu',BukutamuController::class);
