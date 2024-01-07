@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bukutamu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
 class BukutamuController extends Controller
@@ -19,13 +20,42 @@ class BukutamuController extends Controller
         $jumlahbaris=4;
         if(strlen($katakunci)){
             $data=Bukutamu::where('Nama','like',"%$katakunci%")
-            ->orWhere ('Alamat','like',"%$katakunci%")
-            ->paginate($jumlahbaris);
-        }else{
-            
+                ->orWhere ('Alamat','like',"%$katakunci%")
+                ->paginate($jumlahbaris);
+        }
+        else{
             $data=Bukutamu::orderBy('Nama','desc')->paginate($jumlahbaris);
         }
-        return view('Bukutamu.index')->with('data',$data);
+        return view('bukutamu.index')->with('data',$data);
+    }
+
+    public function indexWish(Request $request)
+    {
+        $katakunci=$request->katakunci;
+        $jumlahbaris=4;
+        if(strlen($katakunci)){
+            $data=Bukutamu::where('Nama','like',"%$katakunci%")
+                ->orWhere ('Message','like',"%$katakunci%")
+                ->paginate($jumlahbaris);
+        }
+        else{
+            $data=Bukutamu::orderBy('Nama','desc')->paginate($jumlahbaris);
+        }
+        return view('bukutamu.wishIndex')->with('data',$data);
+    }
+
+    public function updateStatus($id = null)
+    {
+        $data = Bukutamu::findOrFail($id)->first();
+
+        if($data->Status == 0){
+            $data->Status = 1;
+        }
+        else{
+            $data->Status = 0;
+        }
+        $data->update();
+        return back()->with(['success' => 'Berhasil update status pesan']);
     }
 
     /**
@@ -35,7 +65,7 @@ class BukutamuController extends Controller
      */
     public function create()
     {
-        return view('Bukutamu.create');
+        return view('bukutamu.create');
     }
 
     /**
@@ -50,20 +80,39 @@ class BukutamuController extends Controller
         'Nama' => 'required',
         'WhatsApp' => ['required', 'numeric', 'digits_between:10,15'],
         'Alamat' => 'required',
+        'Gender' => 'required',
+        'Message' => 'required'
     ], [
+        'Nama.required' => 'Nama harus diisi',
         'WhatsApp.required' => 'Nomor WhatsApp harus diisi.',
         'WhatsApp.numeric' => 'Nomor WhatsApp harus berupa angka.',
         'WhatsApp.digits_between' => 'Nomor WhatsApp harus memiliki panjang antara 10 dan 15 digit.',
         'Alamat.required' => 'Alamat harus diisi.',
+        'Gender.required' => 'Gender harus diisi.',
+        'Message.required' => 'Message harus diisi.',
     ]);
-
-    Bukutamu::create([
-        'Nama' => $request->Nama,
-        'WhatsApp' => $request->WhatsApp,
-        'Alamat' => $request->Alamat,
-    ]);
-
-    return redirect()->to('Bukutamu')->with('success', 'Data berhasil disimpan.');
+    if(Bukutamu::count() >= 6)
+    {
+        Bukutamu::create([
+            'Nama' => $request->Nama,
+            'WhatsApp' => $request->WhatsApp,
+            'Alamat' => $request->Alamat,
+            'Message' => $request->Message,
+            'Status' => 0,
+            'Gender' => $request->Gender
+        ]);
+    }
+    else{
+        Bukutamu::create([
+            'Nama' => $request->Nama,
+            'WhatsApp' => $request->WhatsApp,
+            'Alamat' => $request->Alamat,
+            'Message' => $request->Message,
+            'Status' => 1,
+            'Gender' => $request->Gender
+        ]);
+    }
+    return back()->with('success', 'Terimakasih telah hadir dan memberikan pesan');
 }
 
 
@@ -87,7 +136,7 @@ class BukutamuController extends Controller
     public function edit($id)
     {
         $data=Bukutamu::where('Nama',$id)->first();
-        return View('Bukutamu.edit')->with('data',$data);
+        return View('bukutamu.edit')->with('data',$data);
     }
 
     /**
@@ -108,7 +157,7 @@ class BukutamuController extends Controller
             'WhatsApp.digits_between' => 'Nomor WhatsApp harus memiliki panjang antara 10 dan 15 digit.',
             'Alamat.required' => 'Alamat harus diisi.',
         ]);
-    
+
         $data=[
             'WhatsApp' => $request->WhatsApp,
             'Alamat' => $request->Alamat,

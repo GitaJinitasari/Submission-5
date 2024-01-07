@@ -13,7 +13,7 @@
 
     <!-- FORM PENCARIAN -->
     <div class="pb-3">
-      <form class="d-flex" action="{{ url('Bukutamu') }}" method="get">
+      <form class="d-flex" action="{{ route('Bukutamu.message') }}" method="get">
           <input class="form-control me-1" type="search" name="katakunci" value="{{ Request::get('katakunci') }}" placeholder="Masukkan kata kunci" aria-label="Search">
           <button class="btn btn-secondary" type="submit">Cari</button>
       </form>
@@ -29,9 +29,8 @@
             <tr>
                 <th class="col-md-1">No</th>
                 <th class="col-md-3">Nama</th>
-                <th class="col-md-4">WhatsApp</th>
-                <th class="col-md-2">Alamat</th>
-                <th class="col-md-2">Aksi</th>
+                <th class="col-md-4">Message</th>
+                <th class="col-md-2">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -40,16 +39,20 @@
            <tr>
             <td>{{ $i }}</td>
             <td>{{ $item->Nama }}</td>
-            <td>{{ $item->WhatsApp }}</td>
-            <td>{{ $item->Alamat }}</td>
+            <td>{{ $item->Message }}</td>
             <td>
-                <a href='{{ url ('Bukutamu/'.$item->Nama.'/edit')}}' class="btn btn-warning btn-sm">Edit</a>
-                <form onsubmit="return confirm('Yakin akan menghapus data?')";
-                class='d-inline' action="{{ url('Bukutamu/'.$item->Nama) }}"method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"class="btn btn-danger btn-sm">Del</button>
-            </form>
+                <form action="{{ route('Bukutamu.message.status', ['id' => $item->id]) }}" method="get">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" onclick="form.submit();" id="flexCheckChecked" @if($item->Status) checked @endif>
+                    <label class="form-check-label" for="flexCheckChecked">
+                        @if ($item->Status)
+                            Aktif
+                        @else
+                            Tidak Aktif
+                        @endif
+                    </label>
+                </div>
+                </form>
             </td>
         </tr>
         <?php $i++?>

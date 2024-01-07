@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bukutamu', function (Blueprint $table) {
+            $table->id();
             $table->string('Nama');
-            $table->integer('WhatsApp');
+            $table->bigInteger('WhatsApp');
+            $table->longtext('Message');
+            $table->boolean('Status');
+            $table->string('Gender');
             $table->text('Alamat');
             $table->timestamps();
         });

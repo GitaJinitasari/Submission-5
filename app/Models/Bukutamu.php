@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bukutamu extends Model
 {
-    protected $fillable=['Nama','WhatsApp','Alamat'];
-    protected $table ='Bukutamu';
+    protected $fillable=['Nama','WhatsApp','Message','Status','Alamat','Gender'];
+    protected $table = 'bukutamu';
 }
